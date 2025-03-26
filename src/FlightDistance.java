@@ -1,7 +1,7 @@
 public abstract class FlightDistance {
     public abstract String toString(int i);
 
-    public String[] calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    public String[] computeFlightDistanceInUnits(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
         double distance = Math.sin(degreeToRadian(lat1)) * Math.sin(degreeToRadian(lat2)) + Math.cos(degreeToRadian(lat1)) * Math.cos(degreeToRadian(lat2)) * Math.cos(degreeToRadian(theta));
         distance = Math.acos(distance);
@@ -15,15 +15,15 @@ public abstract class FlightDistance {
         return distanceString;
     }
 
-    protected double degreeToRadian(double deg) {
+    protected double convertDegreeToRadian(double deg) {
         return (deg * Math.PI / 180.0);
     }
 
-    protected double radianToDegree(double rad) {
+    protected double convertRadianToDegree(double rad) {
         return (rad * 180.0 / Math.PI);
     }
 
-    public void displayMeasurementInstructions(){
+    public void displayFlightDistanceGuidelines(){
         String symbols = "+---------------------------+";
         System.out.printf("\n\n %100s\n %100s", symbols, "| SOME IMPORTANT GUIDELINES |");
         System.out.printf("\n %100s\n", symbols);

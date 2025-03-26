@@ -66,7 +66,7 @@ public class Flight extends FlightDistance {
         RandomGenerator r1 = new RandomGenerator();
         for (int i = 0; i < numOfFlights; i++) {
             String[][] chosenDestinations = r1.randomDestinations();
-            String[] distanceBetweenTheCities = calculateDistance(Double.parseDouble(chosenDestinations[0][1]), Double.parseDouble(chosenDestinations[0][2]), Double.parseDouble(chosenDestinations[1][1]), Double.parseDouble(chosenDestinations[1][2]));
+            String[] distanceBetweenTheCities = computeFlightDistanceInUnits(Double.parseDouble(chosenDestinations[0][1]), Double.parseDouble(chosenDestinations[0][2]), Double.parseDouble(chosenDestinations[1][1]), Double.parseDouble(chosenDestinations[1][2]));
             String flightSchedule = createNewFlightsAndTime();
             String flightNumber = r1.randomFlightNumbGen(2, 1).toUpperCase();
             int numOfSeatsInTheFlight = r1.randomNumOfSeats();
@@ -199,7 +199,7 @@ public class Flight extends FlightDistance {
      * @return distance both in miles and km between the cities/airports
      */
     @Override
-    public String[] calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    public String[] computeFlightDistanceInUnits(double lat1, double lon1, double lat2, double lon2) {
         return super.calculateDistance(lat1, lon1, lat2, lon2);
     }
 
