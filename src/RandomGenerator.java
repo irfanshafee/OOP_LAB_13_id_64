@@ -2,8 +2,13 @@ import java.util.Random;
 
 public class RandomGenerator {
 
-    //        ************************************************************ Fields ************************************************************
+    private static final int MAX_USER_ID = 1000000;
+    private static final int MIN_USER_ID = 20000;
+    private static final int MAX_SEATS = 500;
+    private static final int MIN_SEATS = 75;
+    private static final int ALPHABET_COUNT = 26;
 
+    private final Random random = new Random();
     private String randomNum;
     /*  City name is at the 0-index, its latitude is on the 1-index and longitude on the 2-index*/
     private static final String[][] destinations = {

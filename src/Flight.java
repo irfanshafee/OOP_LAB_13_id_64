@@ -7,6 +7,19 @@ import java.util.*;
 
 public class Flight extends FlightDistance {
 
+    //        ************************************************************ Constants ************************************************************
+
+    private static final double GROUND_SPEED_KNOTS = 450.0;
+    private static final int DEFAULT_NUM_OF_FLIGHTS = 15;
+    private static final int MINUTES_PER_HOUR = 60;
+    private static final int MINUTES_QUARTER = 15;
+    private static final int MINUTES_ROUND_TO = 5;
+    private static final int MINUTES_THRESHOLD = 3;
+    private static final int TIME_QUARTER_THRESHOLD = 8;
+    private static final int MAX_RANDOM_DAYS = 7;
+    private static final int MINUTES_MULTIPLIER = 3;
+    private static final int MAX_RANDOM_MINUTES = 45;
+
     //        ************************************************************ Fields ************************************************************
 
     private final String flightSchedule;
@@ -62,9 +75,8 @@ public class Flight extends FlightDistance {
      * to create flight schedule of the said length in this method.
      */
     public void flightScheduler() {
-        int numOfFlights = 15;              // decides how many unique flights to be included/display in scheduler
         RandomGenerator r1 = new RandomGenerator();
-        for (int i = 0; i < numOfFlights; i++) {
+        for (int i = 0; i < DEFAULT_NUM_OF_FLIGHTS; i++) {
             String[][] chosenDestinations = r1.randomDestinations();
             String[] distanceBetweenTheCities = computeFlightDistanceInUnits(Double.parseDouble(chosenDestinations[0][1]), Double.parseDouble(chosenDestinations[0][2]), Double.parseDouble(chosenDestinations[1][1]), Double.parseDouble(chosenDestinations[1][2]));
             String flightSchedule = createNewFlightsAndTime();
@@ -119,7 +131,7 @@ public class Flight extends FlightDistance {
      * @return formatted flight time
      */
     public String calculateFlightTime(double distanceBetweenTheCities) {
-        double groundSpeed = 450;
+        double groundSpeed = GROUND_SPEED_KNOTS;
         double time = (distanceBetweenTheCities / groundSpeed);
         String timeInString = String.format("%.4s", time);
         String[] timeArray = timeInString.replace('.', ':').split(":");
@@ -127,12 +139,12 @@ public class Flight extends FlightDistance {
         int minutes = Integer.parseInt(timeArray[1]);
         int modulus = minutes % 5;
         // Changing flight time to make minutes near/divisible to 5.
-        if (modulus < 3) {
+        if (modulus < MINUTES_THRESHOLD) {
             minutes -= modulus;
         } else {
             minutes += 5 - modulus;
         }
-        if (minutes >= 60) {
+        if (minutes >= MINUTES_PER_HOUR) {
             minutes -= 60;
             hours++;
         }
@@ -233,10 +245,10 @@ public class Flight extends FlightDistance {
 
         Calendar c = Calendar.getInstance();
         // Incrementing nextFlightDay, so that next scheduled flight would be in the future, not in the present
-        nextFlightDay += Math.random() * 7;
+        nextFlightDay += Math.random() * MAX_RANDOM_DAYS;
         c.add(Calendar.DATE, nextFlightDay);
         c.add(Calendar.HOUR, nextFlightDay);
-        c.set(Calendar.MINUTE, ((c.get(Calendar.MINUTE) * 3) - (int) (Math.random() * 45)));
+        c.set(Calendar.MINUTE, ((c.get(Calendar.MINUTE) * MINUTES_MULTIPLIER) - (int) (Math.random() * MAX_RANDOM_MINUTES)));
         Date myDateObj = c.getTime();
         LocalDateTime date = Instant.ofEpochMilli(myDateObj.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
         date = getNearestHourQuarter(date);
@@ -251,9 +263,9 @@ public class Flight extends FlightDistance {
      */
     public LocalDateTime getNearestHourQuarter(LocalDateTime datetime) {
         int minutes = datetime.getMinute();
-        int mod = minutes % 15;
+        int mod = minutes % MINUTES_QUARTER;
         LocalDateTime newDatetime;
-        if (mod < 8) {
+        if (mod < TIME_QUARTER_THRESHOLD) {
             newDatetime = datetime.minusMinutes(mod);
         } else {
             newDatetime = datetime.plusMinutes(15 - mod);
